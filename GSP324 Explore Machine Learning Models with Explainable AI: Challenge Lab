@@ -1,0 +1,59 @@
+1st task and 2nd task as given in the lab as it is
+
+3rd task:-
+
+Build and train your models
+In the second cell of the Train your first model on the complete dataset section, add the following lines to create the model.
+
+model = Sequential()
+model.add(layers.Dense(8, input_dim=input_size))
+model.add(layers.Dense(1, activation='sigmoid'))
+model.compile(optimizer='sgd', loss='mse')
+model.fit(train_data, train_labels, batch_size=32, epochs=10)
+
+Copy the code for training the second model. Modify model to limited_model as well as train_data, train_labels to limited_train_data, limited_train_labels. The code for the second model should look like the following.
+
+limited_model = Sequential()
+limited_model.add(layers.Dense(8, input_dim=input_size))
+limited_model.add(layers.Dense(1, activation='sigmoid'))
+limited_model.compile(optimizer='sgd', loss='mse')
+limited_model.fit(limited_train_data, limited_train_labels, batch_size=32, epochs=10)
+
+Run the cells in this section and wait for the finish of model training.
+
+4th task:-
+
+Deploy the models to AI Platform
+Moving on to the Deploy your models to the AI Platform section in the notebook.
+
+Replace the values of GCP_PROJECT and MODEL_BUCKET with your project ID and a unique bucket name.
+Change the REGION to us-central1 (Use the same region of the Notebook instance).
+Run those three cells and then confirm the created bucket and the uploaded model files in Cloud Storage.
+
+Create your first AI Platform model: complete_model
+
+
+Add the following codes to the notebook cells for your COMPLETE model.
+
+!gcloud ai-platform models create $MODEL_NAME --regions $REGION
+!gcloud ai-platform versions create $VERSION_NAME \
+--model=$MODEL_NAME \
+--framework='TensorFlow' \
+--runtime-version=2.3 \
+--origin=$MODEL_BUCKET/saved_model/my_model \
+--staging-bucket=$MODEL_BUCKET \
+--python-version=3.7 \
+--project=$GCP_PROJECT
+
+Create your second AI Platform model: limited_model
+Add the following codes to the notebook cells for your LIMITED model.
+
+!gcloud ai-platform models create $LIM_MODEL_NAME --regions $REGION
+!gcloud ai-platform versions create $VERSION_NAME \
+--model=$LIM_MODEL_NAME \
+--framework='TensorFlow' \
+--runtime-version=2.3 \
+--origin=$MODEL_BUCKET/saved_limited_model/my_limited_model \
+--staging-bucket=$MODEL_BUCKET \
+--python-version=3.7 \
+--project=$GCP_PROJECT
